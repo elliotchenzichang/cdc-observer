@@ -24,6 +24,7 @@ func StartMySQLContainer() {
 	}
 	defer cli.Close()
 
+	// todo implement a common function to check if the image had been download
 	reader, err := cli.ImagePull(ctx, ImageName, image.PullOptions{})
 	if err != nil {
 		panic(err)
@@ -47,7 +48,8 @@ func StartMySQLContainer() {
 	}
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image:    ImageName,
+		Image: ImageName,
+		// todo check why the this is not actually the container name, and also find the approach to set the customized container name
 		Hostname: "mysql:cdc-observer:" + RandStringBytesMaskImpr(10),
 		Env: []string{
 			"MYSQL_ROOT_USERNAME=elliot_test",
@@ -60,6 +62,7 @@ func StartMySQLContainer() {
 		panic(err)
 	}
 
+	// todo check how to print the docker running log
 	if err := cli.ContainerStart(ctx, resp.ID, container.StartOptions{}); err != nil {
 		panic(err)
 	}
