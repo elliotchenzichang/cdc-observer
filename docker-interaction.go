@@ -57,6 +57,7 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) {
 		},
 	}
 
+	// todo can only create one container and then start it in the future
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: ImageName,
 		// todo check why the this is not actually the container name, and also find the approach to set the customized container name
