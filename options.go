@@ -8,3 +8,7 @@ type Options struct {
 	Username      string
 	Password      string
 }
+
+func (opt *Options) validates() error {
+	return nil
+}
