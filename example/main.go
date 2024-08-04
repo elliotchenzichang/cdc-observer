@@ -1,7 +1,12 @@
 package main
 
-import cdc "cdc-observer"
+import (
+	cdc "cdc-observer"
+	"context"
+)
 
 func main() {
-	cdc.StartMySQLContainer()
+	dockerClient := cdc.NewDockerClient()
+	ctx := context.Background()
+	dockerClient.StartMySQLContainer(ctx)
 }

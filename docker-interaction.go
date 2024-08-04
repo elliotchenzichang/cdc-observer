@@ -16,25 +16,35 @@ import (
 
 const ImageName = "mysql"
 
-func StartMySQLContainer() {
-	ctx := context.Background()
+type DockerClient struct {
+	client *client.Client
+}
+
+func NewDockerClient() *DockerClient {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
 	}
-	defer cli.Close()
-
-	// todo implement a common function to check if the image had been download
-	reader, err := cli.ImagePull(ctx, ImageName, image.PullOptions{})
-	if err != nil {
-		panic(err)
+	dockerClient := &DockerClient{
+		client: cli,
 	}
+	return dockerClient
+}
 
-	defer reader.Close()
-	// cli.ImagePull is asynchronous.
-	// The reader needs to be read completely for the pull operation to complete.
-	// If stdout is not required, consider using io.Discard instead of os.Stdout.
-	io.Copy(os.Stdout, reader)
+func (dc *DockerClient) StartMySQLContainer(ctx context.Context) {
+	cli := dc.client
+	// todo implement a common function to check if the image had been download
+	if !dc.checkIamgeExistence(ctx, ImageName) {
+		reader, err := cli.ImagePull(ctx, ImageName, image.PullOptions{})
+		if err != nil {
+			panic(err)
+		}
+		defer reader.Close()
+		// cli.ImagePull is asynchronous.
+		// The reader needs to be read completely for the pull operation to complete.
+		// If stdout is not required, consider using io.Discard instead of os.Stdout.
+		io.Copy(os.Stdout, reader)
+	}
 
 	hostConfig := &container.HostConfig{
 		PortBindings: nat.PortMap{
@@ -61,11 +71,21 @@ func StartMySQLContainer() {
 	if err != nil {
 		panic(err)
 	}
+	log.Printf("successfully create a new MySQL container, containerID: %s, warnings: %+v", resp.ID, resp.Warnings)
 
 	// todo check how to print the docker running log
 	if err := cli.ContainerStart(ctx, resp.ID, container.StartOptions{}); err != nil {
 		panic(err)
 	}
+
+	log.Printf("successfully start a new mysql SQL container with ID: %s", resp.ID)
+
+	out, err := cli.ContainerLogs(ctx, resp.ID, container.LogsOptions{ShowStdout: true})
+	if err != nil {
+		panic(err)
+	}
+
+	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
 
 	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
 	select {
@@ -76,20 +96,10 @@ func StartMySQLContainer() {
 	case <-statusCh:
 	}
 
-	out, err := cli.ContainerLogs(ctx, resp.ID, container.LogsOptions{ShowStdout: true})
-	if err != nil {
-		panic(err)
-	}
-
-	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
 }
 
-func StopAllContianer() {
-	ctx := context.Background()
-	cli, err := client.NewClientWithOpts(client.FromEnv)
-	if err != nil {
-		log.Fatalf("failed to create client: %v", err)
-	}
+func (dc *DockerClient) StopAllContianer(ctx context.Context) {
+	cli := dc.client
 
 	containers, err := cli.ContainerList(ctx, container.ListOptions{All: true})
 	if err != nil {
@@ -106,4 +116,10 @@ func StopAllContianer() {
 			}
 		}
 	}
+}
+
+func (dc *DockerClient) checkIamgeExistence(ctx context.Context, imageName string) bool {
+	cli := dc.client
+	_, _, err := cli.ImageInspectWithRaw(ctx, imageName)
+	return err == nil
 }

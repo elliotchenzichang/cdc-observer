@@ -1,7 +1,12 @@
 package cdcobserver
 
-import "testing"
+import (
+	"context"
+	"testing"
+)
 
 func TestStartMySQLContainer(t *testing.T) {
-	StartMySQLContainer()
+	dockerClient := DockerClient{}
+	ctx := context.Background()
+	dockerClient.StartMySQLContainer(ctx)
 }
