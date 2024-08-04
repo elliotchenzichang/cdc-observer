@@ -37,7 +37,7 @@ func StartMySQLContainer() {
 
 	hostConfig := &container.HostConfig{
 		PortBindings: nat.PortMap{
-			"3306/tcp": []nat.PortBinding{
+			"3307/tcp": []nat.PortBinding{
 				{
 					HostIP:   "0.0.0.0",
 					HostPort: "3306",
