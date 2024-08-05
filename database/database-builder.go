@@ -6,6 +6,7 @@ package database
 // 2. user can customized his database, such as adding, modifying and deleting a column
 // 3. self serve defining one table with specific code.
 // this project don't need to build multiple database, all tables you need can be sync into one unify database.
+// todo build the database builder API first
 type DatabaseBuilder struct {
 }
 
