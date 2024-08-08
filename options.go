@@ -4,7 +4,7 @@ type Options struct {
 	EnableDocker  bool
 	ContainerName string
 	DSN           string
-	Port          int
+	ContainerPort int
 	Username      string
 	Password      string
 }

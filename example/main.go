@@ -6,8 +6,7 @@ import (
 )
 
 func main() {
-	opt := &cdc.Options{}
-	dockerClient := cdc.NewDockerClient(opt)
+	dockerClient := cdc.NewDockerClient()
 	ctx := context.Background()
 	dockerClient.StartMySQLContainer(ctx)
 }
