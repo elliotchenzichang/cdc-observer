@@ -38,11 +38,36 @@ type LineString []Point
 type Polygon [][]Point
 
 // JSON type
-type JSON json.RawMessage
+type Json json.RawMessage
 
 // todo try to make this definition more readable
-type Field[T Int | TinyInt | SmallInt | MediumInt | BigInt | Decimal |
-	Float | Double | Date | Time | Year | DateTime | Timestamp | Char | Varchar | Text | Blob | Enum | Set | Point | LineString | Polygon] struct {
+type Field struct {
 	Name string
-	Type T
+	Type interface{}
 }
+
+const (
+	TINY_INT   = "TINYINT"
+	SMALL_INT  = "SMALLINT"
+	MEDIUM_INT = "MEDIUMINT"
+	INT        = "INT"
+	BIG_INT    = "BIGINT"
+	DECIMAL    = "DECIMAL"
+	FLOAT      = "FLOAT"
+	DOUBLE     = "DOUBLE"
+	DTAE       = "DATE"
+	TIME       = "TIME"
+	YEAR       = "YEAR"
+	DATETIME   = "DATETIME"
+	TIMESTAMP  = "TIMESTAMP"
+	CHAR       = "CHAR"
+	VARCHAR    = "VARCHAR"
+	TEXT       = "TEXT"
+	BLOB       = "BLOB"
+	ENUM       = "ENUM"
+	SET        = "SET"
+	POINT      = "POINT"
+	LINESTRING = "LINESTRING"
+	PLOYGON    = "PLOYGON"
+	JSON       = "JSON"
+)
