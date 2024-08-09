@@ -1,5 +1,12 @@
 # cdc-observer
-this project aims to help the learner to observe the CDC event from database
+This project is inspired by the challenges encountered at the onset of my second career role, where I was tasked with developing a Change Data Capture (CDC) data synchronization system. Our test environment was far from ideal: each table in the live database had over 10 or 20 fields, some of which were in JSON type. Creating test data to observe the performance of my data processing logic after some data changes proved to be an arduous task.
+
+# Purpose
+This project seeks to revolutionize this testing experience, making it more efficient and less stressful.
+
+# Getting Started
+
+
 
 # architecture
 1. Build the docker container based on the user's customized database definition.
@@ -7,4 +14,8 @@ this project aims to help the learner to observe the CDC event from database
 3. User can trigger a CDC event by the command this project provided
 4. Print the CDC event in std ouput.
 <img width="1415" alt="image" src="https://github.com/user-attachments/assets/e8ec487f-130b-4e39-8941-70c188afd318">
+
+
+# License
+
 
