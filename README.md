@@ -1,8 +1,5 @@
 # cdc-observer
-This project is inspired by the challenges encountered at the onset of my second career role, where I was tasked with developing a Change Data Capture (CDC) data synchronization system. Our test environment was far from ideal: each table in the live database had over 10 or 20 fields, some of which were in JSON type. Creating test data to observe the performance of my data processing logic after some data changes proved to be an arduous task.
-
-# Purpose
-This project seeks to revolutionize this testing experience, making it more efficient and less stressful.
+This project is inspired by the challenges encountered at the onset of my second career role, where I was tasked with developing a Change Data Capture (CDC) data synchronization system. Our test environment was far from ideal: each table in the live database had over 10 or 20 fields, some of which were in JSON type. Creating test data to observe the performance of my data processing logic after some data changes proved to be an arduous task.This project seeks to revolutionize this testing experience, making it more efficient and less stressful.
 
 # Getting Started
 
