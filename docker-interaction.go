@@ -10,7 +10,6 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/client"
-	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/docker/go-connections/nat"
 )
 
@@ -48,10 +47,10 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 
 	hostConfig := &container.HostConfig{
 		PortBindings: nat.PortMap{
-			"3307/tcp": []nat.PortBinding{
+			"3306/tcp": []nat.PortBinding{
 				{
 					HostIP:   "0.0.0.0",
-					HostPort: "3306",
+					HostPort: "3307",
 				},
 			},
 		},
@@ -81,12 +80,12 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 
 	log.Printf("successfully start a new mysql SQL container with ID: %s", resp.ID)
 
-	out, err := cli.ContainerLogs(ctx, resp.ID, container.LogsOptions{ShowStdout: true})
+	_, err = cli.ContainerLogs(ctx, resp.ID, container.LogsOptions{ShowStdout: true})
 	if err != nil {
 		return err
 	}
 
-	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
+	// stdcopy.StdCopy(os.Stdout, os.Stderr, out)
 	return nil
 
 }

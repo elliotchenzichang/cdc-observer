@@ -3,6 +3,7 @@ package cdcobserver
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/go-mysql-org/go-mysql/canal"
 )
@@ -26,6 +27,8 @@ func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
 	if opt.EnableDocker {
 		observer.enableDocker = true
 		observer.containername = opt.ContainerName
+		dockerClient := NewDockerClient()
+		observer.dockerClient = dockerClient
 	}
 	observer.containerPort = opt.ContainerPort
 	observer.username = opt.Username
@@ -36,13 +39,11 @@ func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
 
 func (ob *CDCObserver) Start(ctx context.Context) error {
 	if ob.enableDocker {
-		dockerClient := NewDockerClient()
+
 		// todo considering add the PGSQL in this repo as well, not urgent, but add a todo here
-		err := dockerClient.StartMySQLContainer(ctx)
-		if err != nil {
-			return err
-		}
-		ob.dockerClient = dockerClient
+		go ob.dockerClient.StartMySQLContainer(ctx)
+		time.Sleep(3 * time.Second)
+
 	}
 	cfg := canal.NewDefaultConfig()
 	cfg.Addr = ob.addr
