@@ -4,7 +4,7 @@ type Table struct {
 	Fields map[string]*Field
 }
 
-func NewTable(name string) *Table {
+func NewTable() *Table {
 	return &Table{
 		Fields: map[string]*Field{},
 	}
@@ -18,9 +18,9 @@ type TableBuilder struct {
 	table *Table
 }
 
-func NewTableBuilder(name string) *TableBuilder {
+func NewTableBuilder() *TableBuilder {
 	return &TableBuilder{
-		table: NewTable(name),
+		table: NewTable(),
 	}
 }
 
@@ -132,4 +132,8 @@ func (tb *TableBuilder) AddFieldLineString(name string) *TableBuilder {
 func (tb *TableBuilder) AddFieldJSON(name string) *TableBuilder {
 	tb.table.AddField(name, new(Json))
 	return tb
+}
+
+func (tb *TableBuilder) Submit() (*Table, error) {
+	return tb.table, nil
 }
