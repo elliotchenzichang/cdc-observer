@@ -8,9 +8,12 @@ require (
 	github.com/go-mysql-org/go-mysql v1.8.0
 	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726
 	github.com/siddontang/go-log v0.0.0-20180807004314-8d05993dda07
+	gorm.io/driver/mysql v1.5.7
+	gorm.io/gorm v1.25.11
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Microsoft/go-winio v0.4.14 // indirect
@@ -54,6 +57,5 @@ require (
 	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	gorm.io/gorm v1.25.11 // indirect
 	gotest.tools/v3 v3.5.1 // indirect
 )

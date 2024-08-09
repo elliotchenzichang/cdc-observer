@@ -7,6 +7,7 @@ type Options struct {
 	ContainerPort int
 	Username      string
 	Password      string
+	DatabaseName  string
 }
 
 func (opt *Options) validates() error {

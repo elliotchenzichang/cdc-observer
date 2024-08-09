@@ -5,6 +5,8 @@ import (
 	"errors"
 	"time"
 
+	"cdc-observer/database"
+
 	"github.com/go-mysql-org/go-mysql/canal"
 )
 
@@ -15,8 +17,11 @@ type CDCObserver struct {
 	username      string
 	password      string
 	addr          string
+	dbName        string
 	river         *canal.Canal
 	dockerClient  *DockerClient
+	// only one database is enough for the goal of this project
+	db *database.Database
 }
 
 func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
@@ -24,10 +29,11 @@ func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
 		return nil, err
 	}
 	observer := &CDCObserver{}
+	observer.dbName = opt.DatabaseName
 	if opt.EnableDocker {
 		observer.enableDocker = true
 		observer.containername = opt.ContainerName
-		dockerClient := NewDockerClient()
+		dockerClient := NewDockerClient(observer.dbName)
 		observer.dockerClient = dockerClient
 	}
 	observer.containerPort = opt.ContainerPort

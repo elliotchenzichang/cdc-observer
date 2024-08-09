@@ -14,6 +14,16 @@ func (t *Table) AddField(name string, dataType interface{}) {
 	t.Fields[name] = &Field{Name: name, Type: dataType}
 }
 
+// Apply the table schema to real database
+func (t *Table) Apply() error {
+	return nil
+}
+
+// Clean the table env from database
+func (t *Table) Clean() error {
+	return nil
+}
+
 type TableBuilder struct {
 	table *Table
 }

@@ -16,16 +16,18 @@ import (
 const ImageName = "mysql"
 
 type DockerClient struct {
+	dbName string
 	client *client.Client
 }
 
-func NewDockerClient() *DockerClient {
+func NewDockerClient(dbName string) *DockerClient {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(err)
 	}
 	dockerClient := &DockerClient{
 		client: cli,
+		dbName: dbName,
 	}
 	return dockerClient
 }
@@ -64,7 +66,7 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 		Env: []string{
 			"MYSQL_ROOT_USERNAME=elliot_test",
 			"MYSQL_ROOT_PASSWORD=123456",
-			"MYSQL_DATABASE=cdc-observer",
+			fmt.Sprintf("MYSQL_DATABASE=%s", dc.dbName),
 		},
 		Tty: false,
 	}, hostConfig, nil, nil, "")
