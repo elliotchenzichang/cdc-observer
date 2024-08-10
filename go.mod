@@ -6,8 +6,10 @@ require (
 	github.com/docker/docker v27.1.1+incompatible
 	github.com/docker/go-connections v0.5.0
 	github.com/go-mysql-org/go-mysql v1.8.0
+	github.com/pkg/errors v0.9.1
 	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726
 	github.com/siddontang/go-log v0.0.0-20180807004314-8d05993dda07
+	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.11
 )
@@ -19,6 +21,7 @@ require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/cznic/mathutil v0.0.0-20181122101859-297441e03548 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -40,7 +43,7 @@ require (
 	github.com/pingcap/failpoint v0.0.0-20220801062533-2eaa32854a6c // indirect
 	github.com/pingcap/log v1.1.1-0.20230317032135-a0d097d16e22 // indirect
 	github.com/pingcap/tidb/pkg/parser v0.0.0-20231103042308-035ad5ccbe67 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/shopspring/decimal v1.2.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0 // indirect
@@ -57,5 +60,6 @@ require (
 	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.5.1 // indirect
 )
