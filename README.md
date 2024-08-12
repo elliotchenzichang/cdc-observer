@@ -13,6 +13,7 @@ This project is inspired by the challenges encountered at the onset of my second
 <img width="1415" alt="image" src="https://github.com/user-attachments/assets/e8ec487f-130b-4e39-8941-70c188afd318">
 
 
-# license
+# reference
+1. what is CDC: https://www.thoughtworks.com/en-au/insights/blog/architecture/change_data_capture
 
 
