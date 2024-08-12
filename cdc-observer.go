@@ -77,7 +77,7 @@ func (ob *CDCObserver) Close(ctx context.Context) error {
 }
 
 func (ob *CDCObserver) AddTable(name string, table *database.Table) error {
-	return ob.db.AddTable(name, table)
+	return ob.db.AddTable(table)
 }
 
 func (ob *CDCObserver) DeleteTable(name string) error {

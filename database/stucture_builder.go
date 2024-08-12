@@ -36,10 +36,6 @@ type Instance struct {
 	index    map[string]int
 }
 
-func (i *Instance) getInstance() reflect.Value {
-	return i.instance
-}
-
 func NewStructBuilder() *StructBuilder {
 	return &StructBuilder{}
 }
