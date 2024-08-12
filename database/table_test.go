@@ -3,7 +3,7 @@ package database
 import "testing"
 
 func TestNewTable(t *testing.T) {
-	table, err := NewTableBuilder().AddFieldInt("test_field_int").Submit()
+	table, err := NewTableBuilder("test_table_name").AddFieldInt("test_field_int").Submit()
 	if err != nil {
 		t.Fatal(err)
 	}

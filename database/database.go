@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type Database struct {
@@ -21,7 +22,9 @@ func NewDatabase(name string, addr string, port int, username string, password s
 		pendingTables: map[string]*Table{},
 	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, addr, port, name)
-	dbClient, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dbClient, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -35,10 +38,12 @@ func (db *Database) ExistedTable(name string) bool {
 	return existed || existedInPendingTables
 }
 
-func (db *Database) AddTable(name string, table *Table) error {
+func (db *Database) AddTable(table *Table) error {
+	name := table.name
 	if db.ExistedTable(name) {
 		return fmt.Errorf("table %s already existed", name)
 	}
+	table.dbClient = db.dbClient
 	db.pendingTables[name] = table
 	return nil
 }
@@ -54,6 +59,11 @@ func (db *Database) DeleteTable(name string) error {
 
 // Apply the database schema to real database
 func (db *Database) Apply() error {
+	for name, table := range db.pendingTables {
+		err := table.Apply()
+		db.tables[name] = table
+		return err
+	}
 	return nil
 }
 

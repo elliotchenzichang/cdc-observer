@@ -2,8 +2,9 @@ package database
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"reflect"
+
+	"github.com/pkg/errors"
 )
 
 var (
@@ -33,6 +34,10 @@ type Struct struct {
 type Instance struct {
 	instance reflect.Value
 	index    map[string]int
+}
+
+func (i *Instance) getInstance() reflect.Value {
+	return i.instance
 }
 
 func NewStructBuilder() *StructBuilder {
@@ -82,6 +87,7 @@ func (b *StructBuilder) AddUint64(name string, tag reflect.StructTag) *StructBui
 
 func (b *StructBuilder) Build() *Struct {
 	stu := reflect.StructOf(b.fields)
+
 	index := make(map[string]int)
 	for i := 0; i < stu.NumField(); i++ {
 		index[stu.Field(i).Name] = i

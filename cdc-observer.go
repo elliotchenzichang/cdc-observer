@@ -45,7 +45,6 @@ func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
 
 func (ob *CDCObserver) Start(ctx context.Context) error {
 	if ob.enableDocker {
-
 		// todo considering add the PGSQL in this repo as well, not urgent, but add a todo here
 		go ob.dockerClient.StartMySQLContainer(ctx)
 		time.Sleep(3 * time.Second)
@@ -75,4 +74,20 @@ func (ob *CDCObserver) Close(ctx context.Context) error {
 	}
 	ob.river.Close()
 	return nil
+}
+
+func (ob *CDCObserver) AddTable(name string, table *database.Table) error {
+	return ob.db.AddTable(name, table)
+}
+
+func (ob *CDCObserver) DeleteTable(name string) error {
+	return ob.db.DeleteTable(name)
+}
+
+func (ob *CDCObserver) ApplyDB() error {
+	return ob.db.Apply()
+}
+
+func (ob *CDCObserver) Clean() error {
+	return ob.db.Clean()
 }
