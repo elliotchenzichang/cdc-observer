@@ -18,6 +18,8 @@ var (
 	BoolType    = reflect.TypeOf(true)
 	Uint8Type   = reflect.TypeOf(uint8(0))
 	Int8Type    = reflect.TypeOf(int8(0))
+	Int16Type   = reflect.TypeOf(int16(0))
+	Int32Type   = reflect.TypeOf(int32(0))
 	Float64Type = reflect.TypeOf(0.0)
 	UInt64Type  = reflect.TypeOf(uint64(0))
 )
@@ -71,6 +73,14 @@ func (b *StructBuilder) AddUint8(name string, tag reflect.StructTag) *StructBuil
 
 func (b *StructBuilder) AddInt8(name string, tag reflect.StructTag) *StructBuilder {
 	return b.AddField(name, Int8Type, tag)
+}
+
+func (b *StructBuilder) AddInt16(name string, tag reflect.StructTag) *StructBuilder {
+	return b.AddField(name, Int16Type, tag)
+}
+
+func (b *StructBuilder) AddInt32(name string, tag reflect.StructTag) *StructBuilder {
+	return b.AddField(name, Int32Type, tag)
 }
 
 func (b *StructBuilder) AddFloat64(name string, tag reflect.StructTag) *StructBuilder {

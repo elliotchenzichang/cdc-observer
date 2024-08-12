@@ -27,11 +27,15 @@ func (t *Table) Apply() error {
 	builder := NewStructBuilder()
 	for _, definition := range t.Fields {
 		switch definition.Type {
+		case SMALL_INT:
+			builder.AddInt8(definition.Name, "")
+		case MEDIUM_INT:
+			builder.AddInt32(definition.Name, "")
 		case INT:
 			builder.AddInt(definition.Name, "")
 		case BIG_INT:
 			builder.AddInt64(definition.Name, "")
-		case VARCHAR:
+		case VARCHAR, TEXT, BLOB:
 			builder.AddString(definition.Name, "")
 		}
 	}
