@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"reflect"
 
 	"github.com/pkg/errors"
@@ -149,9 +148,4 @@ func (in *Instance) Interface() interface{} {
 
 func (in *Instance) Addr() interface{} {
 	return in.instance.Addr().Interface()
-}
-
-func buildTag(columnName string) reflect.StructTag {
-	tag := fmt.Sprintf(`db:"%s"`, columnName)
-	return reflect.StructTag(tag)
 }
