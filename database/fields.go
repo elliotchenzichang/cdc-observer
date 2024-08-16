@@ -43,7 +43,7 @@ type Json json.RawMessage
 // todo try to make this definition more readable
 type Field struct {
 	Name       string
-	Type       interface{}
+	Type       string
 	PrimaryKey bool
 	NullAble   bool
 }

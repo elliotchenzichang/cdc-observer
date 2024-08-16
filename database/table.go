@@ -10,7 +10,7 @@ import (
 type Table struct {
 	name      string
 	dbClient  *gorm.DB
-	Structure interface{}
+	Structure *Struct
 	Fields    map[string]*Field
 }
 
@@ -42,9 +42,9 @@ func (t *Table) Apply() error {
 			builder.AddString(CamelString(definition.Name), reflect.StructTag(fmt.Sprintf("gorm: \"column:%s\"", definition.Name)))
 		}
 	}
-	instance := builder.Build().New()
-	t.Structure = instance.Interface()
-	err := t.dbClient.Table(t.name).Migrator().CreateTable(t.Structure)
+	structure := builder.Build()
+	t.Structure = structure
+	err := t.dbClient.Table(t.name).Migrator().CreateTable(t.Structure.New().Interface())
 	return err
 }
 
@@ -54,7 +54,24 @@ func (t *Table) Clean() error {
 }
 
 func (t *Table) AddRow(r *Row) {
-
+	data := r.data
+	instance := t.Structure.New()
+	for field, value := range data {
+		if definition, exist := t.Fields[field]; exist {
+			switch definition.Type {
+			case SMALL_INT:
+				instance.SetInt8(CamelString(field), value.(int8))
+			case INT:
+				instance.SetInt64(CamelString(field), value.(int64))
+			case VARCHAR:
+				instance.SetString(CamelString(field), value.(string))
+			default:
+				panic(fmt.Sprintf("not support this kind data type yet, field name: %sdata type: %s", field, definition.Type))
+			}
+		}
+	}
+	row := instance.Interface()
+	t.dbClient.Table(t.name).Create(row)
 }
 
 func (t *Table) UpdateRow() {

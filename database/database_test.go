@@ -19,4 +19,6 @@ func TestNewDatabaseAndAddNewTable(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	r := NewRowBuilder().AddField("test_field_int", int64(1)).AddField("test_field_string", "test string").Submit()
+	table.AddRow(r)
 }

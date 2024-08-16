@@ -8,7 +8,7 @@ type Row struct {
 	data map[string]interface{}
 }
 
-func NewRow(tableName string) *Row {
+func NewRow() *Row {
 	return &Row{
 		data: map[string]interface{}{},
 	}
@@ -19,10 +19,25 @@ func (r *Row) AddField(name string, value interface{}) *Row {
 	return r
 }
 
-func (r *Row) Submit() map[string]interface{} {
-	return r.data
-}
-
 func (r *Row) Validate() error {
 	return nil
+}
+
+type RowBuilder struct {
+	r *Row
+}
+
+func NewRowBuilder() *RowBuilder {
+	return &RowBuilder{
+		r: NewRow(),
+	}
+}
+
+func (rb *RowBuilder) AddField(name string, value interface{}) *RowBuilder {
+	rb.r.AddField(name, value)
+	return rb
+}
+
+func (rb *RowBuilder) Submit() *Row {
+	return rb.r
 }
