@@ -16,6 +16,7 @@ type Database struct {
 }
 
 // todo if the database is already existed, it's suppose to sync the database schema to local
+// todo maybe can try to create a database if the database is not existed
 func NewDatabase(name string, addr string, port int, username string, password string) (*Database, error) {
 	db := &Database{
 		Name:          name,
