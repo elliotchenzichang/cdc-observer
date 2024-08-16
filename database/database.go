@@ -15,6 +15,7 @@ type Database struct {
 	pendingTables map[string]*Table
 }
 
+// todo if the database is already existed, it's suppose to sync the database schema to local
 func NewDatabase(name string, addr string, port int, username string, password string) (*Database, error) {
 	db := &Database{
 		Name:          name,
