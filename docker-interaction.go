@@ -64,6 +64,7 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 		// todo check why the this is not actually the container name, and also find the approach to set the customized container name
 		Hostname: "mysql:cdc-observer:" + RandStringBytesMaskImpr(10),
 		Env: []string{
+			// todo find out why the username setting here does work, but it's not a big matter
 			"MYSQL_ROOT_USERNAME=elliot_test",
 			"MYSQL_ROOT_PASSWORD=123456",
 			fmt.Sprintf("MYSQL_DATABASE=%s", dc.dbName),
