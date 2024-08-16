@@ -53,6 +53,22 @@ func (t *Table) Clean() error {
 	return nil
 }
 
+func (t *Table) AddRow(r *Row) {
+
+}
+
+func (t *Table) UpdateRow() {
+
+}
+
+func (t *Table) DeleteRow() {
+
+}
+
+func (t *Table) AddRows(rs Rows) {
+
+}
+
 type TableBuilder struct {
 	table *Table
 }
