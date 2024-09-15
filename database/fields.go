@@ -2,6 +2,7 @@ package database
 
 import (
 	"encoding/json"
+	"reflect"
 	"time"
 )
 
@@ -73,3 +74,7 @@ const (
 	PLOYGON    = "PLOYGON"
 	JSON       = "JSON"
 )
+
+var typeMapper = map[string]reflect.Type{
+	TINY_INT: reflect.TypeOf(int8(0)),
+}

@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"reflect"
 
 	"gorm.io/gorm"
 )
@@ -74,8 +75,27 @@ func (t *Table) AddRow(r *Row) {
 	t.dbClient.Table(t.name).Create(row)
 }
 
-func (t *Table) UpdateRow() {
-
+func (t *Table) UpdateRow(requests []tableUpdateRequest) error {
+	for _, r := range requests {
+		if field, eixts := t.Fields[r.field]; eixts {
+			return fmt.Errorf("the field :%s doesn't exist in table definition", r.field)
+		} else {
+			if reflect.TypeOf(r.to) != typeMapper[field.Type] {
+				return fmt.Errorf("the type of update request does't match the type define in the database table")
+			}
+		}
+	}
+	instance := t.Structure.New()
+	for _, r := range requests {
+		field := t.Fields[r.field]
+		switch field.Type {
+		case INT:
+			instance.SetInt64(r.field, r.to.(int64))
+		default:
+			return fmt.Errorf("doesn't support this type:%s", field.Type)
+		}
+	}
+	return nil
 }
 
 func (t *Table) DeleteRow() {
@@ -208,4 +228,9 @@ func (tb *TableBuilder) AddFieldJSON(name string) *TableBuilder {
 
 func (tb *TableBuilder) Submit() (*Table, error) {
 	return tb.table, nil
+}
+
+type tableUpdateRequest struct {
+	field string
+	to    interface{}
 }
