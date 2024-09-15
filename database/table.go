@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"reflect"
 
 	"gorm.io/gorm"
 )
@@ -32,15 +31,15 @@ func (t *Table) Apply() error {
 	for _, definition := range t.Fields {
 		switch definition.Type {
 		case SMALL_INT:
-			builder.AddInt8(CamelString(definition.Name), reflect.StructTag(fmt.Sprintf("gorm: \"column:%s\"", definition.Name)))
+			builder.AddInt8(CamelString(definition.Name), getGORMFieldTag(definition.Name))
 		case MEDIUM_INT:
-			builder.AddInt32(CamelString(definition.Name), reflect.StructTag(fmt.Sprintf("gorm: \"column:%s\"", definition.Name)))
+			builder.AddInt32(CamelString(definition.Name), getGORMFieldTag(definition.Name))
 		case INT:
-			builder.AddInt(CamelString(definition.Name), reflect.StructTag(fmt.Sprintf("gorm: \"column:%s\"", definition.Name)))
+			builder.AddInt(CamelString(definition.Name), getGORMFieldTag(definition.Name))
 		case BIG_INT:
-			builder.AddInt64(CamelString(definition.Name), reflect.StructTag(fmt.Sprintf("gorm: \"column:%s\"", definition.Name)))
+			builder.AddInt64(CamelString(definition.Name), getGORMFieldTag(definition.Name))
 		case VARCHAR, TEXT, BLOB:
-			builder.AddString(CamelString(definition.Name), reflect.StructTag(fmt.Sprintf("gorm: \"column:%s\"", definition.Name)))
+			builder.AddString(CamelString(definition.Name), getGORMFieldTag(definition.Name))
 		}
 	}
 	structure := builder.Build()
