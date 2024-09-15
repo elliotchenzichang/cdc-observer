@@ -91,6 +91,8 @@ func (t *Table) UpdateRow(requests []tableUpdateRequest) error {
 		switch field.Type {
 		case INT:
 			instance.SetInt64(r.field, r.to.(int64))
+		case VARCHAR:
+			instance.SetString(r.field, r.to.(string))
 		default:
 			return fmt.Errorf("doesn't support this type:%s", field.Type)
 		}
