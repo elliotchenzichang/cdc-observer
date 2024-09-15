@@ -149,3 +149,22 @@ func (in *Instance) Interface() interface{} {
 func (in *Instance) Addr() interface{} {
 	return in.instance.Addr().Interface()
 }
+
+type tag struct {
+	tagPairs map[string]string
+}
+
+func (t *tag) NewTag() *tag {
+	return &tag{
+		tagPairs: map[string]string{},
+	}
+}
+
+func (t *tag) AddKeyPairs(key string, name string) *tag {
+	t.tagPairs[key] = name
+	return t
+}
+
+func (t *tag) Submit() reflect.StructTag {
+	return ""
+}

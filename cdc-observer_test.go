@@ -13,7 +13,7 @@ func TestSyncCDCChangeFromDatabase(t *testing.T) {
 		DSN:          "127.0.0.1:3307",
 		Username:     "root",
 		Password:     "123456",
-		EnableDocker: true,
+		EnableDocker: false,
 		DatabaseName: "elliot_test_database",
 	}
 	ctx := context.Background()
