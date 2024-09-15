@@ -45,7 +45,6 @@ func (db *Database) AddTable(table *Table) error {
 	if db.ExistedTable(name) {
 		return fmt.Errorf("table %s already existed", name)
 	}
-	table.dbClient = db.dbClient
 	db.pendingTables[name] = table
 	return nil
 }

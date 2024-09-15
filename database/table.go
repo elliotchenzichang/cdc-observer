@@ -14,10 +14,11 @@ type Table struct {
 	Fields    map[string]*Field
 }
 
-func NewTable(name string) *Table {
+func NewTable(name string, dbClient *gorm.DB) *Table {
 	return &Table{
-		name:   name,
-		Fields: map[string]*Field{},
+		name:     name,
+		Fields:   map[string]*Field{},
+		dbClient: dbClient,
 	}
 }
 
@@ -90,9 +91,9 @@ type TableBuilder struct {
 	table *Table
 }
 
-func NewTableBuilder(name string) *TableBuilder {
+func NewTableBuilder(name string, dbClient *gorm.DB) *TableBuilder {
 	return &TableBuilder{
-		table: NewTable(name),
+		table: NewTable(name, dbClient),
 	}
 }
 

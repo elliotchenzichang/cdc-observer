@@ -7,7 +7,7 @@ func TestNewDatabaseAndAddNewTable(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	table, err := NewTableBuilder("test_table").AddFieldInt("test_field_int").AddFieldVarchar("test_field_string").Submit()
+	table, err := NewTableBuilder("test_table", db.dbClient).AddFieldInt("test_field_int").AddFieldVarchar("test_field_string").Submit()
 	if err != nil {
 		t.Fatal(err)
 	}
