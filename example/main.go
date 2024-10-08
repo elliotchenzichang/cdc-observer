@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	dockerClient := cdc.NewDockerClient("elliot_test_name")
+	dockerClient, _ := cdc.NewDockerClient()
 	ctx := context.Background()
-	dockerClient.StartMySQLContainer(ctx)
+	_ = dockerClient.StartMySQLContainer(ctx)
 }

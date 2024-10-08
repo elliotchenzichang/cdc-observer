@@ -33,7 +33,10 @@ func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
 	if opt.EnableDocker {
 		observer.enableDocker = true
 		observer.containername = opt.ContainerName
-		dockerClient := NewDockerClient(observer.dbName)
+		dockerClient, err := NewDockerClient()
+		if err != nil {
+			return nil, err
+		}
 		observer.dockerClient = dockerClient
 	}
 	observer.containerPort = opt.ContainerPort
@@ -70,7 +73,7 @@ func (ob *CDCObserver) Start(ctx context.Context) error {
 
 func (ob *CDCObserver) Close(ctx context.Context) error {
 	if ob.enableDocker {
-		ob.dockerClient.StopAllContianer(ctx)
+		ob.dockerClient.StopAllContainers(ctx)
 	}
 	ob.river.Close()
 	return nil
