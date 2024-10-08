@@ -6,7 +6,7 @@ import (
 )
 
 func TestStartMySQLContainer(t *testing.T) {
-	dockerClient := DockerClient{}
+	dockerClient, _ := NewDockerClient()
 	ctx := context.Background()
-	dockerClient.StartMySQLContainer(ctx)
+	_ = dockerClient.StartMySQLContainer(ctx)
 }
