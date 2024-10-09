@@ -1,7 +1,9 @@
 package database
 
 import (
+	"cdc-observer/constant"
 	"fmt"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -9,24 +11,39 @@ import (
 )
 
 type Database struct {
-	Name          string
 	dbClient      *gorm.DB
 	tables        map[string]*Table
 	pendingTables map[string]*Table
 }
 
 // todo if the database is already existed, it's suppose to sync the database schema to local
-// todo maybe can try to create a database if the database is not existed
-func NewDatabase(name string, addr string, port int, username string, password string) (*Database, error) {
+func NewDatabase(port string) (*Database, error) {
 	db := &Database{
-		Name:          name,
 		tables:        map[string]*Table{},
 		pendingTables: map[string]*Table{},
 	}
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, addr, port, name)
-	dbClient, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		constant.DatabaseUsername,
+		constant.DatabasePassword,
+		constant.DatabaseHost,
+		port,
+		constant.DatabaseName,
+	)
+	var (
+		dbClient *gorm.DB
+		err      error
+	)
+	// retry for RetryTimes, if the database is not ready, the database will be ready after 1 second
+	for i := 0; i < constant.RetryTimes; i++ {
+		dbClient, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Info),
+		})
+		if err == nil {
+			break
+		}
+		time.Sleep(constant.RetryInterval)
+	}
 	if err != nil {
 		return nil, err
 	}
