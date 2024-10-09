@@ -17,7 +17,7 @@ func TestSyncCDCChangeFromDatabase(t *testing.T) {
 		DatabaseName: "elliot_test_database",
 	}
 	ctx := context.Background()
-	cdcObserver, err := NewCDCObserver(ctx, opt)
+	cdcObserver, err := NewCDCObserver(opt)
 	if err != nil {
 		t.Fatal(err)
 	}
