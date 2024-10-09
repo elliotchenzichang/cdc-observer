@@ -1,6 +1,7 @@
 package cdcobserver
 
 import (
+	dockerapi "cdc-observer/docker_api"
 	"context"
 	"errors"
 	"time"
@@ -19,12 +20,12 @@ type CDCObserver struct {
 	addr          string
 	dbName        string
 	river         *canal.Canal
-	dockerClient  *DockerClient
+	dockerClient  *dockerapi.DockerClient
 	// only one database is enough for the goal of this project
 	db *database.Database
 }
 
-func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
+func NewCDCObserver(opt *Options) (*CDCObserver, error) {
 	if err := opt.validates(); err != nil {
 		return nil, err
 	}
@@ -33,7 +34,7 @@ func NewCDCObserver(ctx context.Context, opt *Options) (*CDCObserver, error) {
 	if opt.EnableDocker {
 		observer.enableDocker = true
 		observer.containername = opt.ContainerName
-		dockerClient, err := NewDockerClient()
+		dockerClient, err := dockerapi.NewDockerClient()
 		if err != nil {
 			return nil, err
 		}

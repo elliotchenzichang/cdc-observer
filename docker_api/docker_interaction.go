@@ -1,6 +1,7 @@
-package cdcobserver
+package dockerapi
 
 import (
+	"cdc-observer/constant"
 	"context"
 	"fmt"
 	"io"
@@ -13,21 +14,6 @@ import (
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
-)
-
-// the prefix of the name of the cdc-observer containers, like /cdc-observer-mysql, /cdc-observer-pgsql
-const ContainerNamePrefix = "cdc-observer-"
-
-// the image name of the database instance in the container
-const (
-	MysqlImageName = "mysql"
-)
-
-// all the databases share this settings
-const (
-	DatabaseName     = "cdc-observer"
-	DatabaseUsername = "root"
-	DatabasePassword = "cdc-observer-password"
 )
 
 type DockerClient struct {
@@ -48,8 +34,8 @@ func NewDockerClient() (*DockerClient, error) {
 func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 	cli := dc.client
 	// todo implement a common function to check if the image had been download
-	if !dc.checkImageExistence(ctx, MysqlImageName) {
-		reader, err := cli.ImagePull(ctx, MysqlImageName, image.PullOptions{})
+	if !dc.checkImageExistence(ctx, constant.MysqlImageName) {
+		reader, err := cli.ImagePull(ctx, constant.MysqlImageName, image.PullOptions{})
 		if err != nil {
 			return err
 		}
@@ -64,14 +50,14 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 		PortBindings: nat.PortMap{
 			"3306/tcp": []nat.PortBinding{
 				{
-					HostIP:   "0.0.0.0",
+					HostIP:   constant.DatabaseHost,
 					HostPort: "0", // use 0 to let docker automatically choose a free port
 				},
 			},
 		},
 	}
 
-	containerName := fmt.Sprintf("/%s%s", ContainerNamePrefix, MysqlImageName)
+	containerName := dc.ContainerName(constant.MysqlImageName)
 
 	// Check if the container named /cdc-observer-mysql already exists
 	if exists, err := dc.checkContainerExistence(ctx, containerName); err != nil {
@@ -85,10 +71,10 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 
 	// If the container doesn't exist, create it
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: MysqlImageName,
+		Image: constant.MysqlImageName,
 		Env: []string{
-			fmt.Sprintf("MYSQL_ROOT_PASSWORD=%s", DatabasePassword),
-			fmt.Sprintf("MYSQL_DATABASE=%s", DatabaseName),
+			fmt.Sprintf("MYSQL_ROOT_PASSWORD=%s", constant.DatabasePassword),
+			fmt.Sprintf("MYSQL_DATABASE=%s", constant.DatabaseName),
 		},
 		Tty: false,
 	}, hostConfig, nil, nil, containerName)
@@ -113,6 +99,10 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 	return nil
 }
 
+func (dc *DockerClient) ContainerInfo(ctx context.Context, containerName string) (types.ContainerJSON, error) {
+	return dc.client.ContainerInspect(ctx, containerName)
+}
+
 func (dc *DockerClient) StopAllContainers(ctx context.Context) {
 	containers, err := dc.containers(ctx)
 	if err != nil {
@@ -131,13 +121,29 @@ func (dc *DockerClient) StopAllContainers(ctx context.Context) {
 	}
 }
 
+func (dc *DockerClient) RemoveAllContainers(ctx context.Context) {
+	containers, err := dc.containers(ctx)
+	if err != nil {
+		log.Printf("failed to list containers: %v", err)
+	}
+
+	for _, c := range containers {
+		if err := dc.client.ContainerRemove(ctx, c.ID, container.RemoveOptions{}); err != nil {
+			log.Printf("failed to remove container %s: %v", c.ID, err)
+		} else {
+			log.Printf("removed container %s\n", c.ID)
+		}
+	}
+}
+
 func (dc *DockerClient) checkImageExistence(ctx context.Context, imageName string) bool {
 	_, _, err := dc.client.ImageInspectWithRaw(ctx, imageName)
 	return err == nil
 }
 
 func (dc *DockerClient) checkContainerExistence(ctx context.Context, containerName string) (bool, error) {
-	if _, err := dc.client.ContainerInspect(ctx, containerName); err != nil {
+	_, err := dc.ContainerInfo(ctx, containerName)
+	if err != nil {
 		if client.IsErrNotFound(err) {
 			return false, nil
 		}
@@ -152,7 +158,7 @@ func (dc *DockerClient) containers(ctx context.Context) ([]types.Container, erro
 
 func (dc *DockerClient) handleExistingContainer(ctx context.Context, containerName string) error {
 	// Check the container's state
-	cj, err := dc.client.ContainerInspect(ctx, containerName)
+	cj, err := dc.ContainerInfo(ctx, containerName)
 	if err != nil {
 		return err
 	}
@@ -171,7 +177,7 @@ func (dc *DockerClient) handleExistingContainer(ctx context.Context, containerNa
 		// Wait for the container to finish restarting
 		for cj.State.Status == "restarting" {
 			time.Sleep(100 * time.Millisecond)
-			cj, err = dc.client.ContainerInspect(ctx, containerName)
+			cj, err = dc.ContainerInfo(ctx, containerName)
 			if err != nil {
 				return err
 			}
@@ -189,4 +195,19 @@ func (dc *DockerClient) handleExistingContainer(ctx context.Context, containerNa
 		}
 		return nil
 	}
+}
+
+func (dc *DockerClient) ContainerPort(ctx context.Context, containerName string) (string, error) {
+	containerInfo, err := dc.ContainerInfo(ctx, containerName)
+	if err != nil {
+		return "", err
+	}
+
+	// Extract the assigned port
+	assignedPort := containerInfo.NetworkSettings.Ports["3306/tcp"][0].HostPort
+	return assignedPort, nil
+}
+
+func (dc *DockerClient) ContainerName(imageName string) string {
+	return fmt.Sprintf("/%s%s", constant.ContainerNamePrefix, imageName)
 }
