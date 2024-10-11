@@ -54,10 +54,11 @@ func (ob *CDCObserver) Start(ctx context.Context) error {
 	cfg.Addr = fmt.Sprintf("%s:%s", constant.DatabaseHost, port)
 	cfg.User = constant.DatabaseUsername
 	cfg.Password = constant.DatabasePassword
-	// Exclude mysql system tables
-	cfg.ExcludeTableRegex = []string{"mysql\\..*"}
 	// Disable dump by setting Dump.ExecutionPath to empty string
 	cfg.Dump.ExecutionPath = ""
+	// Exclude all databases except cdc-observer
+	cfg.ExcludeTableRegex = []string{"[^cdc-observer]\\..*"}
+	cfg.IncludeTableRegex = []string{"cdc-observer\\..*"}
 
 	c, err := canal.NewCanal(cfg)
 	if err != nil {
