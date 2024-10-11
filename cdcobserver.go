@@ -54,8 +54,10 @@ func (ob *CDCObserver) Start(ctx context.Context) error {
 	cfg.Addr = fmt.Sprintf("%s:%s", constant.DatabaseHost, port)
 	cfg.User = constant.DatabaseUsername
 	cfg.Password = constant.DatabasePassword
-	cfg.Dump.TableDB = constant.DatabaseName
-	cfg.Dump.Tables = []string{}
+	// Exclude mysql system tables
+	cfg.ExcludeTableRegex = []string{"mysql\\..*"}
+	// Disable dump by setting Dump.ExecutionPath to empty string
+	cfg.Dump.ExecutionPath = ""
 
 	c, err := canal.NewCanal(cfg)
 	if err != nil {
