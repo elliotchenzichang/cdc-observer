@@ -73,8 +73,13 @@ func (dc *DockerClient) StartMySQLContainer(ctx context.Context) error {
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: constant.MysqlImageName,
 		Env: []string{
-			fmt.Sprintf("MYSQL_ROOT_PASSWORD=%s", constant.DatabasePassword),
+			"MYSQL_ALLOW_EMPTY_PASSWORD=true",
 			fmt.Sprintf("MYSQL_DATABASE=%s", constant.DatabaseName),
+		},
+		Cmd: []string{
+			"--server-id=1",                          // to avoid conflict with canal
+			"--log-bin=/var/lib/mysql/mysql-bin.log", // enable binlog
+			"--binlog-format=ROW",                    // set binlog format to ROW
 		},
 		Tty: false,
 	}, hostConfig, nil, nil, containerName)

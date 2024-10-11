@@ -7,11 +7,11 @@ const (
 	DatabaseHost     = "0.0.0.0"
 	DatabaseName     = "cdc-observer"
 	DatabaseUsername = "root"
-	DatabasePassword = "cdc-observer-password"
+	DatabasePassword = ""
 )
 
 // retry times and interval for the database connection
 const (
-	RetryTimes    = 10
+	RetryTimes    = 30
 	RetryInterval = 1 * time.Second
 )

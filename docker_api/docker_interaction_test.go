@@ -17,7 +17,6 @@ func TestStartMySQLContainer(t *testing.T) {
 	assert.NoError(t, err, "Failed to start MySQL container")
 
 	defer func() {
-		dockerClient.StopAllContainers(ctx)
 		dockerClient.RemoveAllContainers(ctx)
 	}()
 
