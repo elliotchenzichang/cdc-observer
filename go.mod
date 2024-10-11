@@ -7,7 +7,6 @@ require (
 	github.com/docker/go-connections v0.5.0
 	github.com/go-mysql-org/go-mysql v1.8.0
 	github.com/pkg/errors v0.9.1
-	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726
 	github.com/siddontang/go-log v0.0.0-20180807004314-8d05993dda07
 	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/mysql v1.5.7
@@ -46,6 +45,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/shopspring/decimal v1.2.0 // indirect
+	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0 // indirect
 	go.opentelemetry.io/otel v1.28.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.28.0 // indirect

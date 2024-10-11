@@ -1,4 +1,4 @@
-package cdcobserver
+package handler
 
 import (
 	"github.com/go-mysql-org/go-mysql/canal"
