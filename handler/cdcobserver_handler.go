@@ -11,7 +11,7 @@ type CDCObserverHandler struct {
 
 // todo build a tool for print the CDC event in terminal in table style
 func (h *CDCObserverHandler) OnRow(e *canal.RowsEvent) error {
-	log.Infof("%s %v\n", e.Action, e.Rows)
+	log.Infof("%s %s %v\n", e.Table, e.Action, e.Rows)
 	return nil
 }
 
