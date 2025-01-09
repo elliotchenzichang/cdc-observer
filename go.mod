@@ -1,6 +1,6 @@
 module cdc-observer
 
-go 1.23.2
+go 1.23.4
 
 require (
 	github.com/docker/docker v27.1.1+incompatible
